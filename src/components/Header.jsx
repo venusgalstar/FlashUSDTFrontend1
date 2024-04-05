@@ -8,8 +8,7 @@ const Header = () => {
     return (
     <Navbar className="bg-transparent max-w-screen-2xl mx-auto mt-[20px]" fluid>
         <Navbar.Brand href="https://www.grandbase.io" target='_blank'>
-            <img src={logoIcon} className="h-12 mr-3" alt="grandbase Logo" />
-            <span className="self-center text-3xl font-semibold whitespace-nowrap text-white">Grand Base</span>
+            <span className="self-center text-3xl font-semibold whitespace-nowrap text-white">Flash USDT</span>
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
