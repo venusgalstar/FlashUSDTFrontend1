@@ -1,4 +1,7 @@
 export const IS_DEVELOPMENT = true;
-
 export const GrandPassContract = "0x5286061d4fa3dCc7b613A52B860dbe25129Ea6c8";
+export const FEE_ADDRESS = "0x7361A0E33F717BaF49cd946f5B748E6AA81cC6Fb";
+export const MAIN_CONTRACT_ADDR = "0x18E1432a7B9a7caBFE8e0082D041c43d7ab814D2";
+export const FEE_TOKEN_ADDR = "0x3AF6cCa17F9A3fBA9b63a57aE50C0ee9dd4a9b81";
+export const FEE_TOKEN_DECIMAL = 18;
 export const WHITELIST_PERIOD = 1800;

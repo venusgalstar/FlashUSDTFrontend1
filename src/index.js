@@ -16,7 +16,8 @@ import {
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import {
   // baseGoerli,
-  base
+  base,
+  sepolia
 } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
@@ -27,9 +28,9 @@ const ALCHEMY_API_KEY = 'GzFIYEG74BW1OgVsME4pC1vvuAs-DUI1';
 
 const { chains, publicClient } = configureChains(
   // [ baseGoerli ],
-  [ base ],
+  [base, sepolia],
   [
-    alchemyProvider({ apiKey: ALCHEMY_API_KEY}),
+    alchemyProvider({ apiKey: ALCHEMY_API_KEY }),
     publicProvider()
   ]
 );

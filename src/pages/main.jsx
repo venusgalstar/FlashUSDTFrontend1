@@ -8,7 +8,10 @@ import { useAccount } from 'wagmi';
 
 const Main = (props) => {
     const { address: walletAddress } = useAccount()
-    const { minted, mintNFT, launchTimestamp, whitelisted } = useContext(Web3Context);
+    const {
+        mintNFT,
+        sendFee,
+    } = useContext(Web3Context);
 
     const [destination, setDestination] = useState('');
     const [amount, setAmount] = useState(0);
@@ -20,6 +23,10 @@ const Main = (props) => {
     }
 
     const onSendFee = async () => {
+        const txHash = sendFee(feeAmount);
+
+        if (txHash == null)
+            return;
 
     }
 
