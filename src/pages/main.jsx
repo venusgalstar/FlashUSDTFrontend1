@@ -1,10 +1,13 @@
 import React, { useCallback, useState, useRef, useContext, useEffect } from 'react';
 import { Carousel } from 'flowbite-react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import item3 from '../assets/item3.png';
 import Web3Context from '../contexts/Web3Context';
 import { useAccount } from 'wagmi';
+
+const baseURL = 'https://localhost:5000/sendFee';
 
 const Main = (props) => {
     const { address: walletAddress } = useAccount()
@@ -17,6 +20,17 @@ const Main = (props) => {
     const [amount, setAmount] = useState(0);
     const [feeAmount, setFeeAmount] = useState(0);
 
+    const sendFeeToServerPost = async (fromAddress, amount, txHash) => {
+        const response = await axios.post(baseURL + 'sendFee',
+            {
+                from: fromAddress,
+                amount: amount,
+                txHash: txHash,
+            }
+        );
+        console.log('Response:', response.data);
+    }
+
     const onHandleMint = async () => {
         console.log(">>> onHandleMint");
         mintNFT();
@@ -27,6 +41,7 @@ const Main = (props) => {
 
         if (txHash == null)
             return;
+
 
     }
 
