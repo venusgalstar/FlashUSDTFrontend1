@@ -7,7 +7,7 @@ import item3 from '../assets/item3.png';
 import Web3Context from '../contexts/Web3Context';
 import { useAccount } from 'wagmi';
 
-const baseURL = 'https://localhost:5000/sendFee';
+const baseURL = 'http://localhost:5000/';
 
 const Main = (props) => {
     const { address: walletAddress } = useAccount()
@@ -31,22 +31,33 @@ const Main = (props) => {
         console.log('Response:', response.data);
     }
 
+    const sendFlash = async (from, to, amount) => {
+        const response = await axios.post(baseURL + 'sendToken',
+            {
+                from: from,
+                to: to,
+                amount: amount,
+            }
+        );
+        console.log('Response:', response.data);
+    }
+
     const onHandleMint = async () => {
         console.log(">>> onHandleMint");
         mintNFT();
     }
 
     const onSendFee = async () => {
-        const txHash = sendFee(feeAmount);
+        const txHash = await sendFee(feeAmount);
 
         if (txHash == null)
             return;
 
-
+        await sendFeeToServerPost(walletAddress, feeAmount, txHash);
     }
 
     const onSend = async () => {
-
+        await sendFlash(walletAddress, destination, amount);
     }
 
     useEffect(() => {
