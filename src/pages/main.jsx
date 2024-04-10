@@ -1,6 +1,4 @@
-import React, { useCallback, useState, useRef, useContext, useEffect } from 'react';
-import { Carousel } from 'flowbite-react';
-import { toast } from 'react-toastify';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 import item3 from '../assets/item3.png';
@@ -12,8 +10,8 @@ const baseURL = 'http://localhost:5000/';
 const Main = (props) => {
     const { address: walletAddress } = useAccount()
     const {
-        mintNFT,
         sendFee,
+        approve,
     } = useContext(Web3Context);
 
     const [destination, setDestination] = useState('');
@@ -42,11 +40,6 @@ const Main = (props) => {
         console.log('Response:', response.data);
     }
 
-    const onHandleMint = async () => {
-        console.log(">>> onHandleMint");
-        mintNFT();
-    }
-
     const onSendFee = async () => {
         const txHash = await sendFee(feeAmount);
 
@@ -57,6 +50,14 @@ const Main = (props) => {
     }
 
     const onSend = async () => {
+        
+        const txHash = await approve(walletAddress, amount);
+
+        if( txHash == null ){
+            console.log("Didn't approved");
+            return;
+        }
+        
         await sendFlash(walletAddress, destination, amount);
     }
 

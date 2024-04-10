@@ -1,17 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import Web3 from 'web3';
 import { showToast } from '../utils/utils';
-import { sendFeeToken } from '../contracts/helper';
-import { web3_mintNFT } from '../contracts/grandpass';
+import {
+    sendFeeToken,
+    isApproved,
+    approveToken
+} from '../contracts/helper';
 
 const Web3Context = React.createContext({
     txLoading: false,
-    mintNFT: () => {},
-    sendFee: (fee) => {},
+    mintNFT: () => { },
+    sendFee: (fee) => { },
 });
 
-export const Web3Provider = ({children}) => {
+export const Web3Provider = ({ children }) => {
     const { address: walletAddress } = useAccount();
     const [txLoading, setTxLoading] = useState(false);
 
@@ -21,15 +23,15 @@ export const Web3Provider = ({children}) => {
     const sendFee = async (fee) => {
         let txHash = null;
         setTxLoading(true);
-        try{
-            if(!walletAddress) {
+        try {
+            if (!walletAddress) {
                 setTxLoading(false);
                 showToast('w', 'Please connect your wallet!');
                 return;
             }
 
-            txHash = await sendFeeToken(fee);
-        }catch(err){
+            txHash = await sendFeeToken(walletAddress, fee);
+        } catch (err) {
             console.log(err);
             if (err.message && err.message.includes("User denied transaction signature")) {
                 showToast('e', 'Tx signature denied!');
@@ -41,19 +43,29 @@ export const Web3Provider = ({children}) => {
         return txHash;
     }
 
-    const mintNFT = async () => {
+    const approve = async (walletAddress, amount) => {
+
+        const approvedAmount = await isApproved(walletAddress);
+
+        console.log("approve", approvedAmount);
+        console.log("amount", amount);
+
+        if (parseFloat(approvedAmount) > parseFloat(amount))
+            return true;
+
         setTxLoading(true);
-        console.log("mintNFT >>> walletAddress=", walletAddress)
+        console.log("approve >>> walletAddress=", walletAddress)
         try {
-            if(!walletAddress) {
+            if (!walletAddress) {
                 setTxLoading(false);
                 showToast('w', 'Please connect your wallet!');
-                return;
+                return false;
             }
-            let txHash = await web3_mintNFT(walletAddress);
+            let txHash = await approveToken(walletAddress);
             // await fetchMinted();
-            showToast('s', 'Minted successfully!');
-        } catch(err) {
+            showToast('s', 'Approved successfully!' + txHash);
+            return true;
+        } catch (err) {
             console.log(err);
             if (err.message && err.message.includes("User denied transaction signature")) {
                 showToast('e', 'Tx signature denied!');
@@ -62,11 +74,12 @@ export const Web3Provider = ({children}) => {
             }
         }
         setTxLoading(false);
+
     }
 
     const context = {
         txLoading,
-        mintNFT,
+        approve,
         sendFee,
     }
 
